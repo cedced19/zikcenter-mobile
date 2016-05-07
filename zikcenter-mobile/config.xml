@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="io.github.cedced19.zikcentermobile" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Zikcenter</name>
+    <description>
+        A player which use the musics which are on your Zikcenters.
+    </description>
+    <author email="cedced19@gmail.com" href="https://cedced19.github.io">
+        Cédric JUNG
+    </author>
+    <platform name="android">
+      <icon src="res/icons/android/icon-36-ldpi.png" density="ldpi" />
+      <icon src="res/icons/android/icon-48-mdpi.png" density="mdpi" />
+      <icon src="res/icons/android/icon-72-hdpi.png" density="hdpi" />
+      <icon src="res/icons/android/icon-96-xhdpi.png" density="xhdpi" />
+      <icon src="res/icons/android/icon-144-xxhdpi.png" density="xxhdpi" />
+  </platform>
+    <content src="index.html" />
+    <plugin name="cordova-plugin-whitelist" spec="1" />
+    <plugin name="cordova-plugin-statusbar" spec="1" />
+    <plugin name="cordova-plugin-media" spec="1" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+</widget>
