@@ -28,18 +28,54 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
 
     activity.onReady(function () {
       document.querySelector('#submit').on('click', function () {
-        var name = document.querySelector('#name').value;
-        var adress = document.querySelector('#adress').value;
-        if (!/^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(adress)) {
+        var list = {
+          name: document.querySelector('#name').value,
+          adress: document.querySelector('#adress').value
+        };
+        var add = function (res) {
+          list.musics = res;
+          var lists = localStorage.getItem('lists');
+          if (!Array.isArray(lists)) lists = [];
+          lists.push(list);
+          localStorage.setItem('lists', JSON.stringify(lists));
+        };
+        if (!/^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(list.adress)) {
           return phonon.i18n().get(['newlist_error', 'information', 'ok'], function (values) {
               phonon.alert(values.newlist_error, values.information, false, values.ok);
           });
         }
-        if (!name) {
+        if (!list.name) {
           return phonon.i18n().get(['newlist_no_name', 'information', 'ok'], function (values) {
               phonon.alert(values.newlist_no_name, values.information, false, values.ok);
           });
         }
+        phonon.ajax({
+            method: 'GET',
+            url: list.adress + '/api/',
+            crossDomain: true,
+            dataType: 'json',
+            success: add,
+            error: function(res) {
+              phonon.ajax({
+                  method: 'GET',
+                  url: list.adress + '/data.json',
+                  crossDomain: true,
+                  dataType: 'json',
+                  success: function(res) {
+                    res.forEach(function (item) {
+                      item.uri = item.uri.replace('./', '/');
+                    });
+                    list.musics = res;
+                    add(res);
+                  },
+                  error: function() {
+                    phonon.i18n().get(['newlist_connection_error', 'information', 'ok'], function (values) {
+                        phonon.alert(values.newlist_connection_error, values.information, false, values.ok);
+                    });
+                  }
+              });
+            }
+        });
       });
     });
 });

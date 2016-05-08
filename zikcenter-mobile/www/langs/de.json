@@ -19,5 +19,6 @@
   "newlist_adress": "Adresse",
   "newlist_submit": "Absenden",
   "newlist_error": "Deine Adresse ist nicht gültig.",
-  "newlist_no_name": "Es gibt kein Name."
+  "newlist_no_name": "Es gibt kein Name.",
+  "newlist_connection_error": "Es gibt ein Verbindungsproblem."
 }

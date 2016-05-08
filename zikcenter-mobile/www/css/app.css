@@ -1,0 +1,6 @@
+/*
+ * Fix alert bug
+ */
+.btn.primary.btn-confirm {
+  background-color: inherit !important;
+}

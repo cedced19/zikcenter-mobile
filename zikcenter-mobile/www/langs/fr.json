@@ -1,6 +1,6 @@
 {
   "initialyse_title": "Bienvenue !",
-  "ok": "Oui",
+  "ok": "Ok",
   "cancel": "Annuler",
   "start": "Commencez",
   "menu": "Menu",
@@ -18,5 +18,6 @@
   "newlist_adress": "Adresse",
   "newlist_submit": "Soumettre",
   "newlist_error": "Votre adress n'est pas valide.",
-  "newlist_no_name": "Il n'y a pas de nom."
+  "newlist_no_name": "Il n'y a pas de nom.",
+  "newlist_connection_error": "Il y a un problème de connection."
 }
