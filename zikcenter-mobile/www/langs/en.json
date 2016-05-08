@@ -11,5 +11,10 @@
   "language_btn": "Update your language",
   "language_confirm": "The language has just been updated.",
   "question_sure": "Are you sure?",
-  "newlist_title": "Add a new list"
+  "newlist_title": "Add a new list",
+  "newlist_name": "Name",
+  "newlist_adress": "Adress",
+  "newlist_submit": "Submit",
+  "newlist_error": "Your adress isn't valid.",
+  "newlist_no_name": "There is no name."
 }

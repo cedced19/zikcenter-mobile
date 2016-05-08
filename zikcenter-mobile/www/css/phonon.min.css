@@ -262,7 +262,7 @@ select {
   -webkit-user-select: auto;
 }
 a {
-  color: #0084e7;
+  color: #18BC9C;
   text-decoration: none;
 }
 button {
@@ -356,10 +356,10 @@ button {
   color: #fff !important;
 }
 .primary {
-  background-color: #0084e7 !important;
+  background-color: #18BC9C !important;
 }
 .primary.btn-flat {
-  color: #0084e7 !important;
+  color: #18BC9C !important;
 }
 .positive {
   background-color: #0ae700 !important;
@@ -458,7 +458,7 @@ button {
   width: 100%;
   height: 52px;
   overflow: hidden;
-  background-color: #0084e7;
+  background-color: #18BC9C;
   border-bottom: 0px solid #2e2bc9;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
@@ -515,7 +515,7 @@ button {
 }
 .header-bar .btn:active {
   opacity: 1;
-  background-color: #0084e7;
+  background-color: #18BC9C;
   background-color: rgba(0,0,0,0.1);
 }
 .header-bar .search-input {
@@ -698,7 +698,7 @@ button {
   display: table-cell;
   width: 1%;
   height: 50px;
-  color: #0084e7;
+  color: #18BC9C;
   text-align: center;
   text-transform: uppercase;
   vertical-align: middle;
@@ -720,7 +720,7 @@ button {
   margin-top: auto;
   margin-bottom: -3px;
   height: 3px;
-  background-color: #0084e7;
+  background-color: #18BC9C;
 }
 .header-tabs {
   top: auto;
@@ -1102,7 +1102,7 @@ input[type="url"]:focus,
 input[type="tel"]:focus,
 input[type="color"]:focus {
   border-bottom-width: 2px;
-  border-color: #0084e7;
+  border-color: #18BC9C;
 }
 label {
   width: 100%;
@@ -1142,7 +1142,7 @@ label {
           transform: rotate(-45deg);
   border-radius: 0;
   height: 0.65rem;
-  border-color: #0084e7;
+  border-color: #18BC9C;
   border-top-style: none;
   border-right-style: none;
 }
@@ -1151,7 +1151,8 @@ label {
 }
 .input-wrapper {
   width: 100%;
-  margin-top: 24px;
+  margin-top: 9px;
+  margin-bottom: 14px;
   position: relative;
   display: inline-block;
   vertical-align: top;
@@ -1512,9 +1513,9 @@ table,
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  border-top: 3px solid #0084e7;
-  border-right: 3px solid #0084e7;
-  border-bottom: 3px solid #0084e7;
+  border-top: 3px solid #18BC9C;
+  border-right: 3px solid #18BC9C;
+  border-bottom: 3px solid #18BC9C;
   border-left: 3px solid #eee;
   -webkit-animation: circleLoading 900ms infinite linear;
           animation: circleLoading 900ms infinite linear;
@@ -1539,7 +1540,7 @@ table,
   position: absolute;
   top: 0;
   bottom: 0;
-  background-color: #0084e7;
+  background-color: #18BC9C;
   -webkit-transition: width 0.2s linear;
   transition: width 0.2s linear;
 }

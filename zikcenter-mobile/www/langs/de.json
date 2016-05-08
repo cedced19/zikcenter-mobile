@@ -14,5 +14,10 @@
   "language_confirm": "Die Sprache hat gerade aktualisiert.",
   "question_sure": "Bist du sicher?",
   "go_home": "Zur Startseite",
-  "newlist_title": "Fügen Sie eine neue Liste"
+  "newlist_title": "Fügen Sie eine neue Liste",
+  "newlist_name": "Name",
+  "newlist_adress": "Adresse",
+  "newlist_submit": "Absenden",
+  "newlist_error": "Deine Adresse ist nicht gültig.",
+  "newlist_no_name": "Es gibt kein Name."
 }

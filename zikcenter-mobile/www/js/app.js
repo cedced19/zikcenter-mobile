@@ -27,7 +27,20 @@ phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, 
 phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: false, readyDelay: 0}, function(activity) {
 
     activity.onReady(function () {
-
+      document.querySelector('#submit').on('click', function () {
+        var name = document.querySelector('#name').value;
+        var adress = document.querySelector('#adress').value;
+        if (!/^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(adress)) {
+          return phonon.i18n().get(['newlist_error', 'information', 'ok'], function (values) {
+              phonon.alert(values.newlist_error, values.information, false, values.ok);
+          });
+        }
+        if (!name) {
+          return phonon.i18n().get(['newlist_no_name', 'information', 'ok'], function (values) {
+              phonon.alert(values.newlist_no_name, values.information, false, values.ok);
+          });
+        }
+      });
     });
 });
 

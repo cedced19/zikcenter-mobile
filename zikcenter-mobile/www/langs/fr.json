@@ -13,5 +13,10 @@
   "language_confirm": "La langue vient d'être changée.",
   "question_sure": "Êtes-vous sure ?",
   "go_home": "Aller à l'acceuil",
-  "newlist_title": "Ajouter une nouvelle liste"
+  "newlist_title": "Ajouter une nouvelle liste",
+  "newlist_name": "Nom",
+  "newlist_adress": "Adresse",
+  "newlist_submit": "Soumettre",
+  "newlist_error": "Votre adress n'est pas valide.",
+  "newlist_no_name": "Il n'y a pas de nom."
 }
