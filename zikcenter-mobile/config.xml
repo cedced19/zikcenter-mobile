@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.github.cedced19.zikcentermobile" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Zikcenter</name>
+    <name>ZikCenter</name>
     <description>
-        A player which use the musics which are on your Zikcenters.
+        A player which use the musics which are on your ZikCenters.
     </description>
     <author email="cedced19@gmail.com" href="https://cedced19.github.io">
         Cédric JUNG
