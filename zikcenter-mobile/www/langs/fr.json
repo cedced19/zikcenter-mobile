@@ -1,5 +1,7 @@
 {
-  "initialyse_title": "Bienvenue !",
+  "home_title": "Bienvenue !",
+  "home_no_list": "Vous n'avez pas encore de liste de musiques.",
+  "home_lists": "Listes",
   "ok": "Ok",
   "cancel": "Annuler",
   "start": "Commencez",
@@ -19,5 +21,6 @@
   "newlist_submit": "Soumettre",
   "newlist_error": "Votre adress n'est pas valide.",
   "newlist_no_name": "Il n'y a pas de nom.",
+  "newlist_sucess": "Votre liste a été ajoutée.",
   "newlist_connection_error": "Il y a un problème de connection."
 }

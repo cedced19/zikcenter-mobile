@@ -1,5 +1,7 @@
 {
-  "initialyse_title": "Welcome!",
+  "home_title": "Welcome!",
+  "home_no_list": "You have not yet list of musics.",
+  "home_lists": "Lists",
   "ok":"Yes",
   "cancel": "Cancel",
   "menu": "Menu",
@@ -17,5 +19,6 @@
   "newlist_submit": "Submit",
   "newlist_error": "Your adress isn't valid.",
   "newlist_no_name": "There is no name.",
+  "newlist_sucess": "Your list has just been added.",
   "newlist_connection_error": "There is a connection problem."
 }

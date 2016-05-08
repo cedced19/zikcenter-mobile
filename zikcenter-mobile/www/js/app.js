@@ -16,17 +16,23 @@ phonon.updateLocale(language);
 
 phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, readyDelay: 0}, function(activity) {
 
-    /*activity.onReady(function () {
-      var media = new Media('http://jungv.hd.free.fr:7771/musics/i-wanna-be-loved-by-you-marilyn-monroe.mp3', function () {
+    activity.onReady(function () {
+      /*var media = new Media('http://jungv.hd.free.fr:7771/musics/i-wanna-be-loved-by-you-marilyn-monroe.mp3', function () {
           console.log('done')
       });
-      media.play();
-    });*/
+      media.play();*/
+      var lists = JSON.parse(localStorage.getItem('lists'));
+      if (Array.isArray(lists)) {
+        document.getElementById('no-list').style.display = 'none';
+      } else {
+        document.getElementById('no-list').style.display = 'block';
+      }
+    });
 });
 
 phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: false, readyDelay: 0}, function(activity) {
 
-    activity.onReady(function () {
+    activity.onCreate(function () {
       document.querySelector('#submit').on('click', function () {
         var list = {
           name: document.querySelector('#name').value,
@@ -38,15 +44,19 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
           if (!Array.isArray(lists)) lists = [];
           lists.push(list);
           localStorage.setItem('lists', JSON.stringify(lists));
+          phonon.i18n().get(['newlist_sucess', 'information', 'ok'], function (values) {
+              phonon.alert(values.newlist_sucess, values.information, false, values.ok);
+          });
+          phonon.navigator().changePage('home');
         };
         if (!/^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(list.adress)) {
-          return phonon.i18n().get(['newlist_error', 'information', 'ok'], function (values) {
-              phonon.alert(values.newlist_error, values.information, false, values.ok);
+          return phonon.i18n().get(['newlist_error', 'error', 'ok'], function (values) {
+              phonon.alert(values.newlist_error, values.error, false, values.ok);
           });
         }
         if (!list.name) {
-          return phonon.i18n().get(['newlist_no_name', 'information', 'ok'], function (values) {
-              phonon.alert(values.newlist_no_name, values.information, false, values.ok);
+          return phonon.i18n().get(['newlist_no_name', 'error', 'ok'], function (values) {
+              phonon.alert(values.newlist_no_name, values.error, false, values.ok);
           });
         }
         phonon.ajax({
@@ -69,8 +79,8 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
                     add(res);
                   },
                   error: function() {
-                    phonon.i18n().get(['newlist_connection_error', 'information', 'ok'], function (values) {
-                        phonon.alert(values.newlist_connection_error, values.information, false, values.ok);
+                    phonon.i18n().get(['newlist_connection_error', 'error', 'ok'], function (values) {
+                        phonon.alert(values.newlist_connection_error, values.error, false, values.ok);
                     });
                   }
               });
