@@ -20,5 +20,6 @@
   "newlist_error": "Your adress isn't valid.",
   "newlist_no_name": "There is no name.",
   "newlist_sucess": "Your list has just been added.",
-  "newlist_connection_error": "There is a connection problem."
+  "newlist_connection_error": "There is a connection problem.",
+  "play_musics": "Musics"
 }

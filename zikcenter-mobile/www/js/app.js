@@ -21,12 +21,62 @@ phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, 
           console.log('done')
       });
       media.play();*/
+      var ul = document.querySelector('#lists');
       var lists = JSON.parse(localStorage.getItem('lists'));
+      for (var i in ul.children) {
+        if (ul.children[i].id != 'no-list' && /padded-list/.test(ul.children[i].className)) {
+          ul.removeChild(ul.children[i]);
+        }
+      };
+
       if (Array.isArray(lists)) {
-        document.getElementById('no-list').style.display = 'none';
+        document.querySelector('#no-list').style.display = 'none';
+        lists.forEach(function (list) {
+          var li = document.createElement('li');
+          li.appendChild(document.createTextNode(list.name));
+          li.on('click', function () {
+            phonon.navigator().changePage('play', list.name);
+          });
+          li.className += 'padded-list';
+          ul.appendChild(li);
+        });
       } else {
         document.getElementById('no-list').style.display = 'block';
       }
+    });
+});
+
+
+phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: false, readyDelay: 0}, function(activity) {
+    var list;
+
+
+    activity.onHashChanged(function(name) {
+      var lists = JSON.parse(localStorage.getItem('lists'));
+
+      for (var i in lists) {
+        if (lists[i].name == name) {
+          list = lists[i];
+          break;
+        }
+      }
+    });
+
+    activity.onReady(function () {
+      var ul = document.querySelector('#musics');
+      for (var i in ul.childrenNodes) {
+        ul.removeChild(ul.childrenNodes[i]);
+      };
+      document.querySelector('#list-name').innerHTML = list.name;
+      list.musics.forEach(function (music) {
+        var li = document.createElement('li');
+        li.appendChild(document.createTextNode(music.name));
+        li.on('click', function () {
+          // play this music
+        });
+        li.className += 'padded-list';
+        ul.appendChild(li);
+      });
     });
 });
 
