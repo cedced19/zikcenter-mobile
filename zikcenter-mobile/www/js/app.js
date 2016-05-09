@@ -23,6 +23,14 @@ phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, 
       media.play();*/
       var ul = document.querySelector('#lists');
       var lists = JSON.parse(localStorage.getItem('lists'));
+
+      var latest = document.querySelector('#latest-list');
+      latest.innerHTML = localStorage.getItem('selected-list');
+      latest.on('click', function () {
+        localStorage.setItem('selected-list', latest.innerHTML);
+        phonon.navigator().changePage('play');
+      });
+
       for (var i in ul.children) {
         if (ul.children[i].id != 'no-list' && /padded-list/.test(ul.children[i].className)) {
           ul.removeChild(ul.children[i]);
@@ -35,7 +43,8 @@ phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, 
           var li = document.createElement('li');
           li.appendChild(document.createTextNode(list.name));
           li.on('click', function () {
-            phonon.navigator().changePage('play', list.name);
+            localStorage.setItem('selected-list', list.name);
+            phonon.navigator().changePage('play');
           });
           li.className += 'padded-list';
           ul.appendChild(li);
@@ -47,27 +56,23 @@ phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, 
 });
 
 
-phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: false, readyDelay: 0}, function(activity) {
-    var list;
+phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: false, readyDelay: 1}, function(activity) {
 
-
-    activity.onHashChanged(function(name) {
+    activity.onReady(function () {
+      var list;
       var lists = JSON.parse(localStorage.getItem('lists'));
-
+      var name = localStorage.getItem('selected-list');
       for (var i in lists) {
         if (lists[i].name == name) {
           list = lists[i];
           break;
         }
-      }
-    });
-
-    activity.onReady(function () {
+      };
       var ul = document.querySelector('#musics');
       for (var i in ul.childrenNodes) {
         ul.removeChild(ul.childrenNodes[i]);
       };
-      document.querySelector('#list-name').innerHTML = list.name;
+      document.querySelector('#list-name').innerHTML = name;
       list.musics.forEach(function (music) {
         var li = document.createElement('li');
         li.appendChild(document.createTextNode(music.name));
