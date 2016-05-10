@@ -14,13 +14,42 @@ phonon.options({
 var language = localStorage.getItem('language') || (window.navigator.userLanguage || window.navigator.language).split('-')[0];
 phonon.updateLocale(language);
 
+
+var media, current, list, force;
+var random = function (list, current) {
+  var number = Math.floor(Math.random() * list.length);
+  if (current.name != list[number].name) {
+    return list[number];
+  } else {
+    return random();
+  }
+};
+var stop = function () {
+  if (media) {
+    force = true;
+    media.stop();
+    current = false;
+    media = false;
+  }
+};
+var start = function () {
+  media = new Media(list.adress + current.uri, function () {
+    if (force) {
+      force = false;
+    } else {
+      current = random(list.musics, current);
+      media.stop();
+      media = false;
+      start();
+    }
+  });
+  media.play();
+  document.querySelector('#current-music-name').innerHTML = current.name;
+};
+
 phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, readyDelay: 0}, function(activity) {
 
     activity.onReady(function () {
-      /*var media = new Media('http://jungv.hd.free.fr:7771/musics/i-wanna-be-loved-by-you-marilyn-monroe.mp3', function () {
-          console.log('done')
-      });
-      media.play();*/
       var ul = document.querySelector('#lists');
       var lists = JSON.parse(localStorage.getItem('lists'));
 
@@ -31,23 +60,31 @@ phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, 
         phonon.navigator().changePage('play');
       });
 
-      for (var i in ul.children) {
-        if (ul.children[i].id != 'no-list' && /padded-list/.test(ul.children[i].className)) {
-          ul.removeChild(ul.children[i]);
-        }
-      };
+      while (ul.firstChild) {
+          ul.removeChild(ul.firstChild);
+      }
 
       if (Array.isArray(lists)) {
         document.querySelector('#no-list').style.display = 'none';
-        lists.forEach(function (list) {
-          var li = document.createElement('li');
-          li.appendChild(document.createTextNode(list.name));
-          li.on('click', function () {
-            localStorage.setItem('selected-list', list.name);
-            phonon.navigator().changePage('play');
+        phonon.i18n().get('home_lists', function (value) {
+          var title = document.createElement('li');
+          title.appendChild(document.createTextNode(value));
+          title.className += 'divider';
+          ul.appendChild(title);
+          lists.forEach(function (list) {
+            var li = document.createElement('li');
+            li.appendChild(document.createTextNode(list.name));
+            li.on('click', function () {
+              if (list.name != localStorage.getItem('selected-list')) {
+                stop();
+                localStorage.setItem('selected-list', list.name);
+              }
+              phonon.navigator().changePage('play');
+            });
+            console.log('added')
+            li.className += 'padded-list';
+            ul.appendChild(li);
           });
-          li.className += 'padded-list';
-          ul.appendChild(li);
         });
       } else {
         document.getElementById('no-list').style.display = 'block';
@@ -59,30 +96,53 @@ phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, 
 phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: false, readyDelay: 1}, function(activity) {
 
     activity.onReady(function () {
-      var list;
+
+      // Get the list
       var lists = JSON.parse(localStorage.getItem('lists'));
       var name = localStorage.getItem('selected-list');
+
+
       for (var i in lists) {
         if (lists[i].name == name) {
           list = lists[i];
           break;
         }
       };
+
+
+      // Display musics list
       var ul = document.querySelector('#musics');
-      for (var i in ul.childrenNodes) {
-        ul.removeChild(ul.childrenNodes[i]);
-      };
-      document.querySelector('#list-name').innerHTML = name;
-      list.musics.forEach(function (music) {
-        var li = document.createElement('li');
-        li.appendChild(document.createTextNode(music.name));
-        li.on('click', function () {
-          // play this music
+      while (ul.firstChild) {
+          ul.removeChild(ul.firstChild);
+      }
+      phonon.i18n().get('play_musics', function (value) {
+        var title = document.createElement('li');
+        title.appendChild(document.createTextNode(value));
+        title.className += 'divider';
+        ul.appendChild(title);
+        document.querySelector('#list-name').innerHTML = name;
+        list.musics.forEach(function (music) {
+          var li = document.createElement('li');
+          li.appendChild(document.createTextNode(music.name));
+          li.on('click', function () {
+            stop();
+            current = music;
+            start();
+          });
+          li.className += 'padded-list';
+          ul.appendChild(li);
         });
-        li.className += 'padded-list';
-        ul.appendChild(li);
       });
+
+
+      if (!media) {
+        current = random(list.musics, false);
+        start();
+      }
+
     });
+
+    activity.onClose(stop);
 });
 
 phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: false, readyDelay: 0}, function(activity) {
@@ -95,7 +155,10 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
         };
         var add = function (res) {
           list.musics = res;
-          var lists = localStorage.getItem('lists');
+          if (list.adress.slice(-1) == '/') {
+            list.adress = list.adress.substr(0, list.adress.length-1);
+          }
+          var lists =  JSON.parse(localStorage.getItem('lists'));
           if (!Array.isArray(lists)) lists = [];
           lists.push(list);
           localStorage.setItem('lists', JSON.stringify(lists));
@@ -130,7 +193,6 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
                     res.forEach(function (item) {
                       item.uri = item.uri.replace('./', '/');
                     });
-                    list.musics = res;
                     add(res);
                   },
                   error: function() {
