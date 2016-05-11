@@ -24,5 +24,6 @@
   "newlist_no_name": "Il n'y a pas de nom.",
   "newlist_sucess": "Votre liste a été ajoutée.",
   "newlist_connection_error": "Il y a un problème de connection.",
-  "play_musics": "Musiques"
+  "play_musics": "Musiques",
+  "notif_tricker": "En train d'écouter"
 }

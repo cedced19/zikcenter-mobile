@@ -44,6 +44,30 @@ var start = function (music) {
     }
   });
   media.play();
+  phonon.i18n().get('notif_tricker', function(value) {
+    MusicControls.create({
+      track: current.name,
+      artist: list.name,
+      cover: 'icon.png',
+      dismissable: false,
+      hasPrev: false,
+      hasNext: false,
+      hasClose: false,
+      ticker: value + ': "' + current.name + '"'
+    });
+    MusicControls.subscribe(function (action) {
+      if (action == 'music-controls-pause') {
+        media.pause();
+        MusicControls.updateIsPlaying(false);
+      }
+      if (action == 'music-controls-play') {
+        media.play();
+        MusicControls.updateIsPlaying(true);
+      }
+
+    });
+    MusicControls.listen();
+  });
   document.querySelector('#current-music-name').innerHTML = current.name;
 };
 
