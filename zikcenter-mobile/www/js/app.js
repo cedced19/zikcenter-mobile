@@ -16,10 +16,10 @@ phonon.updateLocale(language);
 
 
 var media, current, list, force;
-var random = function (list, current) {
-  var number = Math.floor(Math.random() * list.length);
-  if (current.name != list[number].name) {
-    return list[number];
+var random = function () {
+  var number = Math.floor(Math.random() * list.musics.length);
+  if (current != list.musics[number]) {
+    return list.musics[number];
   } else {
     return random();
   }
@@ -32,15 +32,15 @@ var stop = function () {
     media = false;
   }
 };
-var start = function () {
+var start = function (music) {
+  current = music;
   media = new Media(list.adress + current.uri, function () {
     if (force) {
       force = false;
     } else {
-      current = random(list.musics, current);
       media.stop();
       media = false;
-      start();
+      start(random());
     }
   });
   media.play();
@@ -81,7 +81,6 @@ phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, 
               }
               phonon.navigator().changePage('play');
             });
-            console.log('added')
             li.className += 'padded-list';
             ul.appendChild(li);
           });
@@ -126,18 +125,15 @@ phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: fa
           li.appendChild(document.createTextNode(music.name));
           li.on('click', function () {
             stop();
-            current = music;
-            start();
+            start(music);
           });
           li.className += 'padded-list';
           ul.appendChild(li);
         });
       });
 
-
       if (!media) {
-        current = random(list.musics, false);
-        start();
+        start(random());
       }
 
     });
