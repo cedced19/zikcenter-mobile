@@ -15,13 +15,19 @@
   "language_confirm": "The language has just been updated.",
   "question_sure": "Are you sure?",
   "newlist_title": "Add a new list",
-  "newlist_name": "Name",
+  "list_name": "Name",
   "newlist_adress": "Adress",
   "newlist_submit": "Submit",
   "newlist_error": "Your adress isn't valid.",
-  "newlist_no_name": "There is no name.",
+  "no_name": "There is no name.",
   "newlist_sucess": "Your list has just been added.",
-  "newlist_connection_error": "There is a connection problem.",
+  "connection_error": "There is a connection problem.",
   "play_musics": "Musics",
-  "notif_tricker": "Now playing"
+  "notif_tricker": "Now playing",
+  "udpatelist_title": "Change the list",
+  "updatelist_update": "Update",
+  "updatelist_refresh": "Refresh",
+  "updatelist_delete": "Delete",
+  "updatelist_other_actions": "Other actions",
+  "updatelist_success": "The list has just been updated."
 }

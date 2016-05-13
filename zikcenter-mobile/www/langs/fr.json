@@ -17,13 +17,19 @@
   "question_sure": "Êtes-vous sure ?",
   "go_home": "Aller à l'acceuil",
   "newlist_title": "Ajouter une nouvelle liste",
-  "newlist_name": "Nom",
+  "list_name": "Nom",
   "newlist_adress": "Adresse",
   "newlist_submit": "Soumettre",
   "newlist_error": "Votre adress n'est pas valide.",
-  "newlist_no_name": "Il n'y a pas de nom.",
+  "no_name": "Il n'y a pas de nom.",
   "newlist_sucess": "Votre liste a été ajoutée.",
-  "newlist_connection_error": "Il y a un problème de connection.",
+  "connection_error": "Il y a un problème de connection.",
   "play_musics": "Musiques",
-  "notif_tricker": "En train d'écouter"
+  "notif_tricker": "En train d'écouter",
+  "udpatelist_title": "Modifier la liste",
+  "updatelist_update": "Mettre à jour",
+  "updatelist_refresh": "Rafraichir",
+  "updatelist_delete": "Supprimer",
+  "updatelist_other_actions": "Autres actions",
+  "updatelist_success": "La liste a été mise à jour."
 }

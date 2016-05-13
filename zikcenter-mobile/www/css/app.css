@@ -4,3 +4,33 @@
 .btn.primary.btn-confirm {
   background-color: inherit !important;
 }
+/*
+ * Pen
+ */
+@font-face {
+   font-family: 'fontello';
+   src: url('../fonts/fontello.eot?20819477');
+   src: url('../fonts/fontello.eot?20819477#iefix') format('embedded-opentype'),
+        url('../fonts/fontello.woff2?20819477') format('woff2'),
+        url('../fonts/fontello.woff?20819477') format('woff'),
+        url('../fonts/fontello.ttf?20819477') format('truetype'),
+        url('../fonts/fontello.svg?20819477#fontello') format('svg');
+   font-weight: normal;
+   font-style: normal;
+}
+.icon-pencil:before {
+   font-family: "fontello";
+   font-size: 24px;
+   line-height: 1;
+   text-decoration: none;
+   text-rendering: auto;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   content: '\e800';
+}
+/*
+ * Margin button
+ */
+button#update {
+  margin-bottom: 15px;
+}
