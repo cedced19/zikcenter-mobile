@@ -21,6 +21,7 @@
   "newlist_adress": "Adresse",
   "newlist_submit": "Absenden",
   "newlist_error": "Deine Adresse ist nicht gültig.",
+  "newlist_same_adress": "Eine andere Liste hat die gleiche Adresse.",
   "no_name": "Es gibt kein Name.",
   "newlist_sucess": "Deine Liste wurde hinzugefügt.",
   "connection_error": "Es gibt ein Verbindungsproblem.",

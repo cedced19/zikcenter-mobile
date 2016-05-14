@@ -19,6 +19,7 @@
   "newlist_adress": "Adress",
   "newlist_submit": "Submit",
   "newlist_error": "Your adress isn't valid.",
+  "newlist_same_adress": "Another list has the same adress.",
   "no_name": "There is no name.",
   "newlist_sucess": "Your list has just been added.",
   "connection_error": "There is a connection problem.",

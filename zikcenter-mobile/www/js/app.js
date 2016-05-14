@@ -170,6 +170,16 @@ phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: fa
 phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: false, readyDelay: 0}, function(activity) {
 
     activity.onCreate(function () {
+      var checkAdress = function (adress) {
+          var lists = JSON.parse(localStorage.getItem('lists'));
+          for (var i in lists) {
+            if (adress == lists[i].adress) {
+              return true;
+            }
+          }
+          return false;
+      };
+
       document.querySelector('#submit').on('click', function () {
         // Define list
         var list = {
@@ -187,6 +197,8 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
           phonon.i18n().get(['newlist_sucess', 'information', 'ok'], function (values) {
               phonon.alert(values.newlist_sucess, values.information, false, values.ok);
           });
+          document.querySelector('#new-name').value = '';
+          document.querySelector('#new-adress').value = '';
           phonon.navigator().changePage('home');
         };
 
@@ -207,6 +219,13 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
         // Replace '/' by nothing if there is
         if (list.adress.slice(-1) == '/') {
           list.adress = list.adress.substr(0, list.adress.length-1);
+        }
+
+        // Check if there is a list in lists which has the same adress
+        if (checkAdress(list.adress)) {
+          return phonon.i18n().get(['newlist_same_adress', 'error', 'ok'], function (values) {
+              phonon.alert(values.newlist_same_adress, values.error, false, values.ok);
+          });
         }
 
         // Get list of musics
@@ -243,17 +262,14 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
 
 phonon.navigator().on({page: 'updatelist', content: 'update-list.html', preventClose: false, readyDelay: 0}, function(activity) {
 
-    activity.onReady(function () {
-      // Get lists
-      var lists = JSON.parse(localStorage.getItem('lists'));
+    activity.onCreate(function () {
 
       // Define value of field
       var name = document.querySelector('#update-name');
-      name.value = list.name;
-      document.querySelector('#update-title').innerHTML = list.name;
 
       // Push updated list to lists and send information
       var update = function () {
+        var lists = JSON.parse(localStorage.getItem('lists')); // Get lists
         for (var i in lists) {
           if (lists[i].adress == list.adress) {
             lists[i] = list;
@@ -282,6 +298,7 @@ phonon.navigator().on({page: 'updatelist', content: 'update-list.html', preventC
         phonon.i18n().get(['question_sure', 'cancel', 'warning', 'ok'], function (values) {
           var confirm = phonon.confirm(values.question_sure, values.warning, true, values.ok, values.cancel);
           confirm.on('confirm', function () {
+            var lists = JSON.parse(localStorage.getItem('lists')); // Get lists
             for (var i in lists) {
               if (lists[i].adress == list.adress) {
                 lists.splice(i, 1);
@@ -327,6 +344,12 @@ phonon.navigator().on({page: 'updatelist', content: 'update-list.html', preventC
             }
         });
       });
+
+    });
+
+    activity.onReady(function () {
+      document.querySelector('#update-name').value = list.name;
+      document.querySelector('#update-title').innerHTML = list.name;
     });
 });
 
