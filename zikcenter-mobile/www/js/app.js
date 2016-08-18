@@ -14,7 +14,6 @@ phonon.options({
 var language = localStorage.getItem('language') || (window.navigator.userLanguage || window.navigator.language).split('-')[0];
 phonon.updateLocale(language);
 
-
 var media, current, list, force;
 var random = function () {
   var number = Math.floor(Math.random() * list.musics.length);
@@ -70,6 +69,21 @@ var start = function (music) {
   });
   document.querySelector('#current-music-name').innerHTML = current.name;
 };
+
+document.addEventListener('beforeunload', function () {
+  MusicControls.destroy();
+}, false);
+
+document.addEventListener('backbutton', function () {
+  console.log(window.location.href)
+    if (window.location.href === 'file:///android_asset/www/index.html#!home') {
+      MusicControls.destroy();
+      stop();
+      navigator.app.exitApp();
+    } else {
+        window.history.back();
+    }
+}, false);
 
 phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, readyDelay: 0}, function(activity) {
 
