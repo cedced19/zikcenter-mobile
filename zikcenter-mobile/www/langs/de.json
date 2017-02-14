@@ -37,5 +37,6 @@
   "write_error": "Ein Schreibfehler ist gerade passiert.",
   "downloading_music": "Herunterladen Musik...",
   "please_wait": "Warten Sie mal",
-  "offline_cannot_play": "Kann nicht die Musik spielen. Stellen Sie sicher, dass Sie die Musik heruntergeladen haben, zu hören, wenn Sie offline sind."
+  "offline_cannot_play": "Kann nicht die Musik spielen. Stellen Sie sicher, dass Sie die Musik heruntergeladen haben, zu hören, wenn Sie offline sind.",
+  "cannot_download_offline": "Die Musik kann nicht ohne Internet heruntergeladen werden."
 }

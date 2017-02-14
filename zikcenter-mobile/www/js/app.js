@@ -240,6 +240,9 @@ phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: fa
           }
 
           downloadbtn.on('click', function () {
+            if (!isOnline()) {
+              return alertError('cannot_download_offline');
+            }
             createFile(music.name, function (file) {
               var fileTransfer = new FileTransfer();
 
