@@ -32,5 +32,7 @@
   "updatelist_refresh": "Rafraichir",
   "updatelist_delete": "Supprimer",
   "updatelist_other_actions": "Autres actions",
-  "updatelist_success": "La liste a été mise à jour."
+  "updatelist_success": "La liste a été mise à jour.",
+  "download_error": "Erreur de téléchargement vient de se produire.",
+  "write_error": "Erreur d'écriture vient de se produire."
 }

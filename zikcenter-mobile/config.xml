@@ -30,4 +30,5 @@
     <allow-intent href="geo:*" />
     <plugin name="cordova-plugin-music-controls" spec="https://github.com/homerours/cordova-music-controls-plugin" />
     <plugin name="cordova-plugin-file-transfer" spec="~1.6.1" />
+    <plugin name="cordova-plugin-file" spec="~4.2.0" />
 </widget>

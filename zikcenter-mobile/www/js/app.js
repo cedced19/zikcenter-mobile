@@ -14,6 +14,7 @@ phonon.options({
 var language = localStorage.getItem('language') || (window.navigator.userLanguage || window.navigator.language).split('-')[0];
 phonon.updateLocale(language);
 
+// Media
 var media, current, list, force;
 var random = function () {
   var number = Math.floor(Math.random() * list.musics.length);
@@ -70,10 +71,12 @@ var start = function (music) {
   document.querySelector('#current-music-name').innerHTML = current.name;
 };
 
+// Destroy player's notification
 document.addEventListener('beforeunload', function () {
   MusicControls.destroy();
 }, false);
 
+// Back Button
 document.addEventListener('backbutton', function () {
   console.log(window.location.href)
     if (window.location.href === 'file:///android_asset/www/index.html#!home') {
@@ -85,6 +88,7 @@ document.addEventListener('backbutton', function () {
     }
 }, false);
 
+// Display
 phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, readyDelay: 0}, function(activity) {
 
     activity.onReady(function () {
@@ -134,6 +138,27 @@ phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, 
 
 phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: false, readyDelay: 1}, function(activity) {
 
+    // Format music name to filename
+    var format = function (name) {
+      return name.toLowerCase()
+	               .replace(/ /g, '-')
+                 .replace(/_/g, '-')
+                 .replace(/ã©/g, 'é')
+                 .replace(/ã§/g, 'ç');
+    };
+
+    // File system
+    var createFile = function (name, onSuccess, onError) {
+      var random = Math.random().toString(36).substring(7);
+      window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function(fileSystem) {
+          fileSystem.getDirectory('Zikcenter', {create: true, exclusive: false}, function(dirEntry) {
+              dirEntry.getFile(random + '-' + format(name) + '.mp3', { create: true, exclusive: false }, function (fileEntry) {
+                  onSuccess(fileEntry)
+              }, onError);
+          }, onError);
+      }, onError);
+    };
+
     activity.onReady(function () {
 
       // Get the list
@@ -165,7 +190,29 @@ phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: fa
           // Create download button
           var downloadbtn = document.createElement('a');
           downloadbtn.on('click', function () {
+            downloadbtn.style.display = 'none';
+            createFile(music.name, function (file) {
+              var fileTransfer = new FileTransfer();
+              fileTransfer.onprogress = console.log;
 
+              var alertError = function (text) {
+                downloadbtn.style.display = 'block';
+                phonon.i18n().get([text, 'error', 'ok'], function (values) {
+                    phonon.alert(values[text], values.error, false, values.ok);
+                });
+              };
+
+              fileTransfer.download(encodeURI(list.adress + music.uri), file.toURL(),
+              function(entry) {
+                    console.log('download complete: ' + entry.toURL());
+              },
+              function() {
+                    alertError('download_error');
+              }, false, {});
+
+            }, function () {
+              alertError('write_error');
+            });
           });
           downloadbtn.className += 'pull-right icon icon-download';
           li.appendChild(downloadbtn);

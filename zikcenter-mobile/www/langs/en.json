@@ -30,5 +30,7 @@
   "updatelist_refresh": "Refresh",
   "updatelist_delete": "Delete",
   "updatelist_other_actions": "Other actions",
-  "updatelist_success": "The list has just been updated."
+  "updatelist_success": "The list has just been updated.",
+  "download_error": "A download error has just happened.",
+  "write_error": "A write error has just happened."
 }
