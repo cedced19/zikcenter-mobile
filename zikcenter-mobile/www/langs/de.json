@@ -34,5 +34,7 @@
   "updatelist_other_actions": "Andere Aktions",
   "updatelist_success": "Die Liste hat gerade aktualisiert.",
   "download_error": "Ein Download-Fehler ist gerade passiert.",
-  "write_error": "Ein Schreibfehler ist gerade passiert."
+  "write_error": "Ein Schreibfehler ist gerade passiert.",
+  "downloading_music": "Herunterladen Musik...",
+  "please_wait": "Warten Sie mal"
 }

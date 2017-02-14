@@ -33,6 +33,8 @@
   "updatelist_delete": "Supprimer",
   "updatelist_other_actions": "Autres actions",
   "updatelist_success": "La liste a été mise à jour.",
-  "download_error": "Erreur de téléchargement vient de se produire.",
-  "write_error": "Erreur d'écriture vient de se produire."
+  "download_error": "Une erreur de téléchargement vient de se produire.",
+  "write_error": "Une erreur d'écriture vient de se produire.",
+  "downloading_music": "Téléchargement de la musique en cours...",
+  "please_wait": "Veuillez patienter"
 }

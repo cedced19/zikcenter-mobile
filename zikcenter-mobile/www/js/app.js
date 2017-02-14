@@ -34,7 +34,13 @@ var stop = function () {
 };
 var start = function (music) {
   current = music;
-  media = new Media(list.adress + current.uri, function () {
+  var adress;
+  if (music.hasOwnProperty('path')) {
+    adress = current.path;
+  } else {
+    adress = list.adress + current.uri;
+  }
+  media = new Media(adress, function () {
     if (force) {
       force = false;
     } else {
@@ -87,6 +93,13 @@ document.addEventListener('backbutton', function () {
         window.history.back();
     }
 }, false);
+
+// Alert Errors
+var alertError = function (text) {
+  phonon.i18n().get([text, 'error', 'ok'], function (values) {
+      phonon.alert(values[text], values.error, false, values.ok);
+  });
+};
 
 // Display
 phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, readyDelay: 0}, function(activity) {
@@ -164,10 +177,12 @@ phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: fa
       // Get the list
       var lists = JSON.parse(localStorage.getItem('lists'));
       var name = localStorage.getItem('selected-list');
+      var listKey;
 
       for (var i in lists) {
         if (lists[i].name == name) {
           list = lists[i];
+          listKey = i;
           break;
         }
       };
@@ -184,33 +199,50 @@ phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: fa
         title.className += 'divider';
         ul.appendChild(title);
         document.querySelector('#list-name').innerHTML = name;
-        list.musics.forEach(function (music) {
+
+        list.musics.forEach(function (music, key) {
           var li = document.createElement('li');
 
           // Create download button
           var downloadbtn = document.createElement('a');
+
+          if (music.hasOwnProperty('path')) {
+            downloadbtn.style.color = '#88c3a6';
+          }
+
           downloadbtn.on('click', function () {
-            downloadbtn.style.display = 'none';
             createFile(music.name, function (file) {
               var fileTransfer = new FileTransfer();
-              fileTransfer.onprogress = console.log;
 
-              var alertError = function (text) {
-                downloadbtn.style.display = 'block';
-                phonon.i18n().get([text, 'error', 'ok'], function (values) {
-                    phonon.alert(values[text], values.error, false, values.ok);
-                });
+              phonon.i18n().get(['downloading_music', 'please_wait'], function (values) {
+                  cordova.plugin.pDialog.init({
+                      progressStyle : 'HORIZONTAL',
+                      cancelable : false,
+                      title : values.please_wait,
+                      message : values.downloading_music
+                  });
+              });
+
+              fileTransfer.onprogress = function(progressEvent) {
+                    cordova.plugin.pDialog.setProgress(Math.floor(progressEvent.loaded / progressEvent.total * 100));
               };
 
               fileTransfer.download(encodeURI(list.adress + music.uri), file.toURL(),
               function(entry) {
-                    console.log('download complete: ' + entry.toURL());
+                    cordova.plugin.pDialog.dismiss();
+                    downloadbtn.style.color = '#88c3a6';
+                    lists[listKey].musics[key].path = entry.toURL();
+                    localStorage.setItem('lists', JSON.stringify(lists));
               },
               function() {
+                    downloadbtn.style.color = '#bd0d13';
+                    cordova.plugin.pDialog.dismiss();
                     alertError('download_error');
               }, false, {});
 
             }, function () {
+              downloadbtn.style.color = '#bd0d13';
+              cordova.plugin.pDialog.dismiss();
               alertError('write_error');
             });
           });

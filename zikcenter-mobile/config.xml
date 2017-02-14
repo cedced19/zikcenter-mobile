@@ -31,4 +31,5 @@
     <plugin name="cordova-plugin-music-controls" spec="https://github.com/homerours/cordova-music-controls-plugin" />
     <plugin name="cordova-plugin-file-transfer" spec="~1.6.1" />
     <plugin name="cordova-plugin-file" spec="~4.2.0" />
+    <plugin name="cordova-plugin-pdialog" spec="~2.0.1" />
 </widget>
