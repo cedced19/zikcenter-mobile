@@ -36,5 +36,6 @@
   "download_error": "Une erreur de téléchargement vient de se produire.",
   "write_error": "Une erreur d'écriture vient de se produire.",
   "downloading_music": "Téléchargement de la musique en cours...",
-  "please_wait": "Veuillez patienter"
+  "please_wait": "Veuillez patienter",
+  "offline_cannot_play": "La musique ne peut pas être joué. Assurez-vous d'avoir téléchargé la musique pour pouvoir l'écouter lorsque vous êtes déconnecté."
 }

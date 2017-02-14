@@ -34,5 +34,6 @@
   "download_error": "A download error has just happened.",
   "write_error": "A write error has just happened.",
   "downloading_music": "Downloading music...",
-  "please_wait": "Please wait"
+  "please_wait": "Please wait",
+  "offline_cannot_play":  "Cannot play the music. Make sure you have downloaded the music to listen it when you are offline."
 }

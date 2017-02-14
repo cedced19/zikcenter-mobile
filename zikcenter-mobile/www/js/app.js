@@ -14,12 +14,45 @@ phonon.options({
 var language = localStorage.getItem('language') || (window.navigator.userLanguage || window.navigator.language).split('-')[0];
 phonon.updateLocale(language);
 
+// Alert Errors
+var alertError = function (text) {
+  phonon.i18n().get([text, 'error', 'ok'], function (values) {
+      phonon.alert(values[text], values.error, false, values.ok);
+  });
+};
+
+// Check connection
+var isOnline = function () {
+    var networkState = navigator.connection.type;
+    if (networkState === Connection.NONE) {
+        return false;
+    }
+    return true;
+};
+
+// Get musics which have been downloaded before
+var getLocalMusicsList = function (list) {
+  var localList = [];
+  list.forEach(function (music) {
+    if (music.hasOwnProperty('path')) {
+      localList.push(music)
+    }
+  });
+  return localList;
+};
+
 // Media
 var media, current, list, force;
 var random = function () {
-  var number = Math.floor(Math.random() * list.musics.length);
-  if (current != list.musics[number]) {
-    return list.musics[number];
+  var currentList;
+  if (isOnline()) {
+    currentList = list.musics;
+  } else {
+    currentList = getLocalMusicsList(list.musics);
+  }
+  var number = Math.floor(Math.random() * currentList.length);
+  if (current != currentList[number]) {
+    return currentList[number];
   } else {
     return random();
   }
@@ -37,6 +70,9 @@ var start = function (music) {
   var adress;
   if (music.hasOwnProperty('path')) {
     adress = current.path;
+  } else if (!isOnline()) {
+    start(random());
+    alertError('offline_cannot_play');
   } else {
     adress = list.adress + current.uri;
   }
@@ -93,13 +129,6 @@ document.addEventListener('backbutton', function () {
         window.history.back();
     }
 }, false);
-
-// Alert Errors
-var alertError = function (text) {
-  phonon.i18n().get([text, 'error', 'ok'], function (values) {
-      phonon.alert(values[text], values.error, false, values.ok);
-  });
-};
 
 // Display
 phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, readyDelay: 0}, function(activity) {
@@ -310,16 +339,12 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
 
         // Check if adress is an url
         if (!/^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(list.adress)) {
-          return phonon.i18n().get(['newlist_error', 'error', 'ok'], function (values) {
-              phonon.alert(values.newlist_error, values.error, false, values.ok);
-          });
+          return alertError('newlist_error');
         }
 
         // Check if there is a list
         if (!list.name || list.name == '') {
-          return phonon.i18n().get(['no_name', 'error', 'ok'], function (values) {
-              phonon.alert(values.no_name, values.error, false, values.ok);
-          });
+          return alertError('no_name');
         }
 
         // Replace '/' by nothing if there is
@@ -329,9 +354,7 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
 
         // Check if there is a list in lists which has the same adress
         if (checkAdress(list.adress)) {
-          return phonon.i18n().get(['newlist_same_adress', 'error', 'ok'], function (values) {
-              phonon.alert(values.newlist_same_adress, values.error, false, values.ok);
-          });
+          return alertError('newlist_same_adress');
         }
 
         // Get list of musics
@@ -355,9 +378,7 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
                     add(res);
                   },
                   error: function() {
-                    phonon.i18n().get(['connection_error', 'error', 'ok'], function (values) {
-                        phonon.alert(values.connection_error, values.error, false, values.ok);
-                    });
+                    alertError('connection_error');
                   }
               });
             }
@@ -391,9 +412,7 @@ phonon.navigator().on({page: 'updatelist', content: 'update-list.html', preventC
       document.querySelector('#update').on('click', function () {
         // Check if there is a name
         if (!name.value || name.value == '') {
-          return phonon.i18n().get(['no_name', 'error', 'ok'], function (values) {
-              phonon.alert(values.no_name, values.error, false, values.ok);
-          });
+          return alertError('no_name');
         }
         list.name = name.value;
         localStorage.setItem('selected-list', name.value);
@@ -442,9 +461,7 @@ phonon.navigator().on({page: 'updatelist', content: 'update-list.html', preventC
                     update();
                   },
                   error: function() {
-                    phonon.i18n().get(['connection_error', 'error', 'ok'], function (values) {
-                        phonon.alert(values.connection_error, values.error, false, values.ok);
-                    });
+                    alertError('connection_error');
                   }
               });
             }
