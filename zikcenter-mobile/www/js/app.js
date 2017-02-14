@@ -161,12 +161,25 @@ phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: fa
         document.querySelector('#list-name').innerHTML = name;
         list.musics.forEach(function (music) {
           var li = document.createElement('li');
-          li.appendChild(document.createTextNode(music.name));
-          li.on('click', function () {
+
+          // Create download button
+          var downloadbtn = document.createElement('a');
+          downloadbtn.on('click', function () {
+
+          });
+          downloadbtn.className += 'pull-right icon icon-download';
+          li.appendChild(downloadbtn);
+
+          // Create play button
+          var playBtn = document.createElement('a');
+          playBtn.on('click', function () {
             stop();
             start(music);
           });
-          li.className += 'padded-list';
+          playBtn.className += 'padded-list';
+          playBtn.appendChild(document.createTextNode(music.name));
+          li.appendChild(playBtn);
+
           ul.appendChild(li);
         });
       });
