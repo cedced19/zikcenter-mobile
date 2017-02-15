@@ -38,5 +38,6 @@
   "downloading_music": "Téléchargement de la musique en cours...",
   "please_wait": "Veuillez patienter",
   "offline_cannot_play": "La musique ne peut pas être joué. Assurez-vous d'avoir téléchargé la musique pour pouvoir l'écouter lorsque vous êtes déconnecté.",
-  "cannot_download_offline": "La musique ne peut pas être téléchargé sans connection internet."
+  "cannot_download_offline": "La musique ne peut pas être téléchargé sans connection internet.",
+  "deleting_file_error": "Une erreur de suppression d'un fichier est survenu."
 }

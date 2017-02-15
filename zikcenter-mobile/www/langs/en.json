@@ -36,5 +36,6 @@
   "downloading_music": "Downloading music...",
   "please_wait": "Please wait",
   "offline_cannot_play":  "Cannot play the music. Make sure you have downloaded the music to listen it when you are offline.",
-  "cannot_download_offline": "The music cannot be downloaded without internet connection."
+  "cannot_download_offline": "The music cannot be downloaded without internet connection.",
+  "deleting_file_error": "A file deletion error has occurred."
 }

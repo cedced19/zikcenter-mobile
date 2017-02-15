@@ -263,6 +263,13 @@ phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: fa
               function(entry) {
                     cordova.plugin.pDialog.dismiss();
                     downloadbtn.style.color = '#88c3a6';
+                    if (music.hasOwnProperty('path')) {
+                      window.resolveLocalFileSystemURL(music.path, function(fileEntry){
+                        fileEntry.remove(function(){},function(){
+                            alertError('deleting_file_error');
+                        });
+                      }, console.log);
+                    }
                     lists[listKey].musics[key].path = entry.toURL();
                     localStorage.setItem('lists', JSON.stringify(lists));
               },
@@ -426,6 +433,13 @@ phonon.navigator().on({page: 'updatelist', content: 'update-list.html', preventC
         phonon.i18n().get(['question_sure', 'cancel', 'warning', 'ok'], function (values) {
           var confirm = phonon.confirm(values.question_sure, values.warning, true, values.ok, values.cancel);
           confirm.on('confirm', function () {
+            getLocalMusicsList(list.musics).forEach(function (music) {
+              window.resolveLocalFileSystemURL(music.path, function(fileEntry){
+                fileEntry.remove(function(){},function(){
+                    alertError('deleting_file_error');
+                });
+              }, console.log);
+            });
             var lists = JSON.parse(localStorage.getItem('lists')); // Get lists
             for (var i in lists) {
               if (lists[i].adress == list.adress) {
