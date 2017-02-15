@@ -31,9 +31,9 @@ var isOnline = function () {
 };
 
 // Get musics which have been downloaded before
-var getLocalMusicsList = function (list) {
+var getLocalMusicsList = function (array) {
   var localList = [];
-  list.forEach(function (music) {
+  array.forEach(function (music) {
     if (music.hasOwnProperty('path')) {
       localList.push(music)
     }
@@ -441,13 +441,26 @@ phonon.navigator().on({page: 'updatelist', content: 'update-list.html', preventC
       });
 
       document.querySelector('#refresh').on('click', function () {
+        var addPaths = function (newList) {
+          var oldList = getLocalMusicsList(list.musics);
+          newList.forEach(function(music, key) {
+            for (var i in oldList) {
+              if (music.name == oldList[i].name) {
+                newList[key].path = oldList[i].path;
+                break;
+              }
+            }
+          });
+          return newList;
+        };
+
         phonon.ajax({
             method: 'GET',
             url: list.adress + '/api/',
             crossDomain: true,
             dataType: 'json',
             success: function (res) {
-              list.musics = res;
+              list.musics = addPaths(res);
               update();
             },
             error: function(res) {
@@ -460,7 +473,8 @@ phonon.navigator().on({page: 'updatelist', content: 'update-list.html', preventC
                     res.forEach(function (item) {
                       item.uri = item.uri.replace('./', '/');
                     });
-                    list.musics = res;
+
+                    list.musics = addPaths(res);
                     update();
                   },
                   error: function() {
