@@ -14,11 +14,45 @@ phonon.options({
 var language = localStorage.getItem('language') || (window.navigator.userLanguage || window.navigator.language).split('-')[0];
 phonon.updateLocale(language);
 
+// Alert Errors
+var alertError = function (text) {
+  phonon.i18n().get([text, 'error', 'ok'], function (values) {
+      phonon.alert(values[text], values.error, false, values.ok);
+  });
+};
+
+// Check connection
+var isOnline = function () {
+    var networkState = navigator.connection.type;
+    if (networkState === Connection.NONE) {
+        return false;
+    }
+    return true;
+};
+
+// Get musics which have been downloaded before
+var getLocalMusicsList = function (array) {
+  var localList = [];
+  array.forEach(function (music) {
+    if (music.hasOwnProperty('path')) {
+      localList.push(music)
+    }
+  });
+  return localList;
+};
+
+// Media
 var media, current, list, force;
 var random = function () {
-  var number = Math.floor(Math.random() * list.musics.length);
-  if (current != list.musics[number]) {
-    return list.musics[number];
+  var currentList;
+  if (isOnline()) {
+    currentList = list.musics;
+  } else {
+    currentList = getLocalMusicsList(list.musics);
+  }
+  var number = Math.floor(Math.random() * currentList.length);
+  if (current != currentList[number]) {
+    return currentList[number];
   } else {
     return random();
   }
@@ -33,7 +67,16 @@ var stop = function () {
 };
 var start = function (music) {
   current = music;
-  media = new Media(list.adress + current.uri, function () {
+  var adress;
+  if (music.hasOwnProperty('path')) {
+    adress = current.path;
+  } else if (!isOnline()) {
+    start(random());
+    alertError('offline_cannot_play');
+  } else {
+    adress = list.adress + current.uri;
+  }
+  media = new Media(adress, function () {
     if (force) {
       force = false;
     } else {
@@ -70,10 +113,12 @@ var start = function (music) {
   document.querySelector('#current-music-name').innerHTML = current.name;
 };
 
+// Destroy player's notification
 document.addEventListener('beforeunload', function () {
   MusicControls.destroy();
 }, false);
 
+// Back Button
 document.addEventListener('backbutton', function () {
   console.log(window.location.href)
     if (window.location.href === 'file:///android_asset/www/index.html#!home') {
@@ -85,6 +130,7 @@ document.addEventListener('backbutton', function () {
     }
 }, false);
 
+// Display
 phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, readyDelay: 0}, function(activity) {
 
     activity.onReady(function () {
@@ -134,15 +180,38 @@ phonon.navigator().on({page: 'home', content: 'home.html', preventClose: false, 
 
 phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: false, readyDelay: 1}, function(activity) {
 
+    // Format music name to filename
+    var format = function (name) {
+      return name.toLowerCase()
+	               .replace(/ /g, '-')
+                 .replace(/_/g, '-')
+                 .replace(/ã©/g, 'é')
+                 .replace(/ã§/g, 'ç');
+    };
+
+    // File system
+    var createFile = function (name, onSuccess, onError) {
+      var random = Math.random().toString(36).substring(7);
+      window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function(fileSystem) {
+          fileSystem.getDirectory('Zikcenter', {create: true, exclusive: false}, function(dirEntry) {
+              dirEntry.getFile(random + '-' + format(name) + '.mp3', { create: true, exclusive: false }, function (fileEntry) {
+                  onSuccess(fileEntry)
+              }, onError);
+          }, onError);
+      }, onError);
+    };
+
     activity.onReady(function () {
 
       // Get the list
       var lists = JSON.parse(localStorage.getItem('lists'));
       var name = localStorage.getItem('selected-list');
+      var listKey;
 
       for (var i in lists) {
         if (lists[i].name == name) {
           list = lists[i];
+          listKey = i;
           break;
         }
       };
@@ -159,14 +228,76 @@ phonon.navigator().on({page: 'play', content: 'play-list.html', preventClose: fa
         title.className += 'divider';
         ul.appendChild(title);
         document.querySelector('#list-name').innerHTML = name;
-        list.musics.forEach(function (music) {
+
+        list.musics.forEach(function (music, key) {
           var li = document.createElement('li');
-          li.appendChild(document.createTextNode(music.name));
-          li.on('click', function () {
+
+          // Create download button
+          var downloadbtn = document.createElement('a');
+
+          if (music.hasOwnProperty('path')) {
+            downloadbtn.style.color = '#88c3a6';
+          }
+
+          downloadbtn.on('click', function () {
+            if (!isOnline()) {
+              return alertError('cannot_download_offline');
+            }
+            createFile(music.name, function (file) {
+              var fileTransfer = new FileTransfer();
+
+              phonon.i18n().get(['downloading_music', 'please_wait'], function (values) {
+                  cordova.plugin.pDialog.init({
+                      progressStyle : 'HORIZONTAL',
+                      cancelable : false,
+                      title : values.please_wait,
+                      message : values.downloading_music
+                  });
+              });
+
+              fileTransfer.onprogress = function(progressEvent) {
+                    cordova.plugin.pDialog.setProgress(Math.floor(progressEvent.loaded / progressEvent.total * 100));
+              };
+
+              fileTransfer.download(encodeURI(list.adress + music.uri), file.toURL(),
+              function(entry) {
+                    cordova.plugin.pDialog.dismiss();
+                    downloadbtn.style.color = '#88c3a6';
+                    if (music.hasOwnProperty('path')) {
+                      window.resolveLocalFileSystemURL(music.path, function(fileEntry){
+                        fileEntry.remove(function(){},function(){
+                            alertError('deleting_file_error');
+                        });
+                      }, console.log);
+                    }
+                    lists[listKey].musics[key].path = entry.toURL();
+                    localStorage.setItem('lists', JSON.stringify(lists));
+              },
+              function() {
+                    downloadbtn.style.color = '#bd0d13';
+                    cordova.plugin.pDialog.dismiss();
+                    alertError('download_error');
+              }, false, {});
+
+            }, function () {
+              downloadbtn.style.color = '#bd0d13';
+              cordova.plugin.pDialog.dismiss();
+              alertError('write_error');
+            });
+          });
+          downloadbtn.className += 'pull-right icon icon-download';
+          li.appendChild(downloadbtn);
+
+          // Create play button
+          var playBtn = document.createElement('a');
+          playBtn.on('click', function () {
             stop();
             start(music);
           });
-          li.className += 'padded-list';
+          playBtn.className += 'padded-list';
+          playBtn.appendChild(document.createTextNode(music.name));
+          li.appendChild(playBtn);
+
           ul.appendChild(li);
         });
       });
@@ -218,16 +349,12 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
 
         // Check if adress is an url
         if (!/^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(list.adress)) {
-          return phonon.i18n().get(['newlist_error', 'error', 'ok'], function (values) {
-              phonon.alert(values.newlist_error, values.error, false, values.ok);
-          });
+          return alertError('newlist_error');
         }
 
         // Check if there is a list
         if (!list.name || list.name == '') {
-          return phonon.i18n().get(['no_name', 'error', 'ok'], function (values) {
-              phonon.alert(values.no_name, values.error, false, values.ok);
-          });
+          return alertError('no_name');
         }
 
         // Replace '/' by nothing if there is
@@ -237,9 +364,7 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
 
         // Check if there is a list in lists which has the same adress
         if (checkAdress(list.adress)) {
-          return phonon.i18n().get(['newlist_same_adress', 'error', 'ok'], function (values) {
-              phonon.alert(values.newlist_same_adress, values.error, false, values.ok);
-          });
+          return alertError('newlist_same_adress');
         }
 
         // Get list of musics
@@ -263,9 +388,7 @@ phonon.navigator().on({page: 'newlist', content: 'new-list.html', preventClose: 
                     add(res);
                   },
                   error: function() {
-                    phonon.i18n().get(['connection_error', 'error', 'ok'], function (values) {
-                        phonon.alert(values.connection_error, values.error, false, values.ok);
-                    });
+                    alertError('connection_error');
                   }
               });
             }
@@ -299,9 +422,7 @@ phonon.navigator().on({page: 'updatelist', content: 'update-list.html', preventC
       document.querySelector('#update').on('click', function () {
         // Check if there is a name
         if (!name.value || name.value == '') {
-          return phonon.i18n().get(['no_name', 'error', 'ok'], function (values) {
-              phonon.alert(values.no_name, values.error, false, values.ok);
-          });
+          return alertError('no_name');
         }
         list.name = name.value;
         localStorage.setItem('selected-list', name.value);
@@ -312,6 +433,13 @@ phonon.navigator().on({page: 'updatelist', content: 'update-list.html', preventC
         phonon.i18n().get(['question_sure', 'cancel', 'warning', 'ok'], function (values) {
           var confirm = phonon.confirm(values.question_sure, values.warning, true, values.ok, values.cancel);
           confirm.on('confirm', function () {
+            getLocalMusicsList(list.musics).forEach(function (music) {
+              window.resolveLocalFileSystemURL(music.path, function(fileEntry){
+                fileEntry.remove(function(){},function(){
+                    alertError('deleting_file_error');
+                });
+              }, console.log);
+            });
             var lists = JSON.parse(localStorage.getItem('lists')); // Get lists
             for (var i in lists) {
               if (lists[i].adress == list.adress) {
@@ -326,14 +454,57 @@ phonon.navigator().on({page: 'updatelist', content: 'update-list.html', preventC
         });
       });
 
+      document.querySelector('#delete-just-files').on('click', function () {
+        phonon.i18n().get(['question_sure', 'cancel', 'warning', 'ok'], function (values) {
+          var confirm = phonon.confirm(values.question_sure, values.warning, true, values.ok, values.cancel);
+          confirm.on('confirm', function () {
+            getLocalMusicsList(list.musics).forEach(function (music) {
+              window.resolveLocalFileSystemURL(music.path, function(fileEntry){
+                fileEntry.remove(function(){},function(){
+                    alertError('deleting_file_error');
+                });
+              }, console.log);
+            });
+            var lists = JSON.parse(localStorage.getItem('lists')); // Get lists
+            for (var i in lists) {
+              stop();
+              if (lists[i].adress == list.adress) {
+                lists[i].musics.forEach(function (music, key) {
+                  if (music.hasOwnProperty('path')) {
+                    delete lists[i].musics[key].path;
+                  }
+                });
+                localStorage.setItem('lists', JSON.stringify(lists));
+                phonon.i18n().get(['files_deleted', 'information', 'ok'], function (values) {
+                    phonon.alert(values.files_deleted, values.information, false, values.ok);
+                });
+              }
+            }
+          });
+        });
+      });
+
       document.querySelector('#refresh').on('click', function () {
+        var addPaths = function (newList) {
+          var oldList = getLocalMusicsList(list.musics);
+          newList.forEach(function(music, key) {
+            for (var i in oldList) {
+              if (music.name == oldList[i].name) {
+                newList[key].path = oldList[i].path;
+                break;
+              }
+            }
+          });
+          return newList;
+        };
+
         phonon.ajax({
             method: 'GET',
             url: list.adress + '/api/',
             crossDomain: true,
             dataType: 'json',
             success: function (res) {
-              list.musics = res;
+              list.musics = addPaths(res);
               update();
             },
             error: function(res) {
@@ -346,13 +517,12 @@ phonon.navigator().on({page: 'updatelist', content: 'update-list.html', preventC
                     res.forEach(function (item) {
                       item.uri = item.uri.replace('./', '/');
                     });
-                    list.musics = res;
+
+                    list.musics = addPaths(res);
                     update();
                   },
                   error: function() {
-                    phonon.i18n().get(['connection_error', 'error', 'ok'], function (values) {
-                        phonon.alert(values.connection_error, values.error, false, values.ok);
-                    });
+                    alertError('connection_error');
                   }
               });
             }

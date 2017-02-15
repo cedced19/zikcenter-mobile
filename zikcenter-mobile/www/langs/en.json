@@ -10,7 +10,7 @@
   "information": "Information",
   "warning": "Warning",
   "error": "Error",
-  "language_select": "Choose your language, you can choose from seven different languages.",
+  "language_select": "Choose your language, you can choose from three different languages.",
   "language_btn": "Update your language",
   "language_confirm": "The language has just been updated.",
   "question_sure": "Are you sure?",
@@ -30,5 +30,14 @@
   "updatelist_refresh": "Refresh",
   "updatelist_delete": "Delete",
   "updatelist_other_actions": "Other actions",
-  "updatelist_success": "The list has just been updated."
+  "updatelist_success": "The list has just been updated.",
+  "download_error": "A download error has just happened.",
+  "write_error": "A write error has just happened.",
+  "downloading_music": "Downloading music...",
+  "please_wait": "Please wait",
+  "offline_cannot_play":  "Cannot play the music. Make sure you have downloaded the music to listen it when you are offline.",
+  "cannot_download_offline": "The music cannot be downloaded without internet connection.",
+  "deleting_file_error": "A file deletion error has occurred.",
+  "updatelist_delete_just_files": "Remove files only",
+  "files_deleted": "The files has been deleted."
 }

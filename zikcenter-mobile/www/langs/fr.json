@@ -11,7 +11,7 @@
   "information": "Information",
   "warning": "Attention",
   "error": "Erreur",
-  "language_select": "Choisissez votre langue, vous pouvez choisir parmi sept langues différentes.",
+  "language_select": "Choisissez votre langue, vous pouvez choisir parmi trois langues différentes.",
   "language_btn": "Modifiez votre langue",
   "language_confirm": "La langue vient d'être changée.",
   "question_sure": "Êtes-vous sure ?",
@@ -32,5 +32,14 @@
   "updatelist_refresh": "Rafraichir",
   "updatelist_delete": "Supprimer",
   "updatelist_other_actions": "Autres actions",
-  "updatelist_success": "La liste a été mise à jour."
+  "updatelist_success": "La liste a été mise à jour.",
+  "download_error": "Une erreur de téléchargement vient de se produire.",
+  "write_error": "Une erreur d'écriture vient de se produire.",
+  "downloading_music": "Téléchargement de la musique en cours...",
+  "please_wait": "Veuillez patienter",
+  "offline_cannot_play": "La musique ne peut pas être joué. Assurez-vous d'avoir téléchargé la musique pour pouvoir l'écouter lorsque vous êtes déconnecté.",
+  "cannot_download_offline": "La musique ne peut pas être téléchargé sans connection internet.",
+  "deleting_file_error": "Une erreur de suppression d'un fichier est survenu.",
+  "updatelist_delete_just_files": "Supprimer seulement les fichiers",
+  "files_deleted": "Les fichiers viennent d'être supprimés."
 }
