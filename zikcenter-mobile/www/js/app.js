@@ -454,6 +454,36 @@ phonon.navigator().on({page: 'updatelist', content: 'update-list.html', preventC
         });
       });
 
+      document.querySelector('#delete-just-files').on('click', function () {
+        phonon.i18n().get(['question_sure', 'cancel', 'warning', 'ok'], function (values) {
+          var confirm = phonon.confirm(values.question_sure, values.warning, true, values.ok, values.cancel);
+          confirm.on('confirm', function () {
+            getLocalMusicsList(list.musics).forEach(function (music) {
+              window.resolveLocalFileSystemURL(music.path, function(fileEntry){
+                fileEntry.remove(function(){},function(){
+                    alertError('deleting_file_error');
+                });
+              }, console.log);
+            });
+            var lists = JSON.parse(localStorage.getItem('lists')); // Get lists
+            for (var i in lists) {
+              stop();
+              if (lists[i].adress == list.adress) {
+                lists[i].musics.forEach(function (music, key) {
+                  if (music.hasOwnProperty('path')) {
+                    delete lists[i].musics[key].path;
+                  }
+                });
+                localStorage.setItem('lists', JSON.stringify(lists));
+                phonon.i18n().get(['files_deleted', 'information', 'ok'], function (values) {
+                    phonon.alert(values.files_deleted, values.information, false, values.ok);
+                });
+              }
+            }
+          });
+        });
+      });
+
       document.querySelector('#refresh').on('click', function () {
         var addPaths = function (newList) {
           var oldList = getLocalMusicsList(list.musics);

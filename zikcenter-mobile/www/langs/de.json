@@ -39,5 +39,7 @@
   "please_wait": "Warten Sie mal",
   "offline_cannot_play": "Kann nicht die Musik spielen. Stellen Sie sicher, dass Sie die Musik heruntergeladen haben, zu hören, wenn Sie offline sind.",
   "cannot_download_offline": "Die Musik kann nicht ohne Internet heruntergeladen werden.",
-  "deleting_file_error": "Ein Fehler hat durch das Löschen einer Datei aufgetreten."
+  "deleting_file_error": "Ein Fehler hat durch das Löschen einer Datei aufgetreten.",
+  "updatelist_delete_just_files": "Löschen Sie nur Dateien",
+  "files_deleted": " Die Dateien wurden gerade gelöscht."
 }
